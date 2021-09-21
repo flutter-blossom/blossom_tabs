@@ -1,39 +1,67 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Tabs manager for [flutter-blossom](https://github.com/flutter-blossom/) project.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+![](https://github.com/flutter-blossom/blossom_tabs/blob/master/assets/example.png)
+
+ - You can drag and drop tabs and reorder them.
+ - dynamically add tabs at runtime.
+ - save the current state of tab manger for later use (i.e- at next app restart).
+ - customize appearance and behavior.
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+```bash
+
+flutter pub add blossom_tabs: ^1.0.0
+
+```
+
+```
+import 'package:blossom_tabs/blossom_tabs.dart';
+
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+You can add in widget tree like this - 
 
 ```dart
-const like = 'sample';
+// configure `controller`
+var _controller = BlossomTabController<int>(tabs: []); // infer data type for easy access
+
+return BlossomTabControllerScope(
+  controller: _controller,
+  child: Scaffold(
+    appBar: BlossomTabBar<int>(
+      height: 48,
+      selectedColor: Colors.blue,
+      stickyColor: Colors.white,
+      backgroundColor: Colors.blue.withOpacity(0.3),
+      dividerColor: Colors.blue,
+    ),
+    body: BlossomTabView<int>(
+      builder: (context, data) {
+        return Center(
+            child: Text(
+          data.toString(),
+          style: const TextStyle(color: Colors.white, fontSize: 18),
+        ));
+      },
+    ),
+  ),
+);
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+Additional  you can listen to tabs state changes using `BlossomTabControllerScopeDescendant`. like this -
+
+```dart
+BlossomTabControllerScopeDescendant<int>(
+  builder: (context, controller) {
+  return Container(
+    color: controller.currentTab == 'd' ? Colors.white : Colors.blue,
+  );
+});
+```

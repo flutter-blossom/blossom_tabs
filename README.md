@@ -11,15 +11,16 @@ Tabs manager for [flutter-blossom](https://github.com/flutter-blossom/) project.
 
 ## Getting started
 
-```bash
+first add it to your project
 
+```bash
 flutter pub add blossom_tabs: ^1.0.0
 
 ```
+then import it
 
-```
+```dart
 import 'package:blossom_tabs/blossom_tabs.dart';
-
 ```
 
 ## Usage
@@ -55,7 +56,7 @@ return BlossomTabControllerScope(
 
 ## Additional information
 
-Additional  you can listen to tabs state changes using `BlossomTabControllerScopeDescendant`. like this -
+Additionally you can listen to tabs state changes using `BlossomTabControllerScopeDescendant`. like this -
 
 ```dart
 BlossomTabControllerScopeDescendant<int>(

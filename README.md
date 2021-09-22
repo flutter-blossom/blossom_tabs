@@ -14,7 +14,7 @@ Tabs manager for [flutter-blossom](https://github.com/flutter-blossom/) project.
 first add it to your project
 
 ```bash
-flutter pub add blossom_tabs: ^1.0.0
+flutter pub add blossom_tabs
 
 ```
 then import it

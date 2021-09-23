@@ -4,10 +4,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'blossom_tab.g.dart';
 
-T _dataFromJson<T>(Map<String, dynamic> data) =>
+T _dataFromJson<T>(
+        Map<String, dynamic> data, T Function(Map<String, dynamic>) dataFromJson) =>
     data.keys.length == 1 && data.keys.first == 'value'
         ? data['value']
-        : (T as dynamic)?.fromJson(data);
+        : dataFromJson(data);
 
 Map<String, dynamic>? _dataToJson<T>(T data) =>
     data is String || data is int || data is double || data is bool
@@ -48,8 +49,9 @@ class BlossomTab<T> {
   @JsonKey(ignore: true)
   final List<Widget> actions;
 
-  factory BlossomTab.fromJson(Map<String, dynamic> json) =>
-      _$BlossomTabFromJson(json) as BlossomTab<T>;
+  static BlossomTab<S> fromJson<S>(
+          Map<String, dynamic> json, S Function(Map<String, dynamic>) dataFromJson) =>
+      _$BlossomTabFromJson<S>(json, dataFromJson);
   Map<String, dynamic> toJson() => _$BlossomTabToJson(this);
 
   Widget build(BuildContext context, bool isActive) {

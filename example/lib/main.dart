@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   BlossomTab<int> _getTab(String e) => BlossomTab<int>(
           id: e,
-          data: ['a', 'b', 'c', 'd', 'e'].indexOf(e),
+          data: int.parse(e.codeUnits.join()),
           title: e.toUpperCase(),
           isSticky: e == 'd',
           stickyWidth: 80,
@@ -94,14 +94,17 @@ class _MyHomePageState extends State<MyHomePage> {
     _tabs = ['a', 'b', 'c', 'd', 'e']
         .map(
           (e) => _getTab(e),
-          // BlossomTab.fromJson({
-          //           "id": e,
-          //           "data": {"value": 3},
-          //           "title": e.toUpperCase(),
-          //           "isSticky": e == 'd' ? true : false,
-          //           "maxWidth": 200.0,
-          //           "stickyWidth": 50.0
-          //         })
+          //     BlossomTab.fromJson<int>(
+          //   {
+          //     "id": e,
+          //     "data": {"value": int.parse(e.codeUnits.join())},
+          //     "title": e.toUpperCase(),
+          //     "isSticky": e == 'd' ? true : false,
+          //     "maxWidth": 200.0,
+          //     "stickyWidth": 50.0
+          //   },
+          //   (map) => map['value'],
+          // ),
         )
         .toList();
     _controller = BlossomTabController<int>(currentTab: 'b', tabs: _tabs);

@@ -24,8 +24,9 @@ class BlossomTabController<T> extends Model {
 
   String? get currentTab => _currentTab;
 
-  factory BlossomTabController.fromJson(Map<String, dynamic> json) =>
-      _$BlossomTabControllerFromJson(json) as BlossomTabController<T>;
+  static BlossomTabController<S> fromJson<S>(
+          Map<String, dynamic> json, S Function(Map<String, dynamic>) dataFromJson) =>
+      _$BlossomTabControllerFromJson<S>(json, dataFromJson);
   Map<String, dynamic> toJson() => _$BlossomTabControllerToJson(this);
 
   set currentTab(String? tab) {

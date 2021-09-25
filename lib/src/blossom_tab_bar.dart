@@ -2,6 +2,7 @@
 
 import 'package:blossom_tabs/src/blossom_tab.dart';
 import 'package:blossom_tabs/src/blossom_tab_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:scoped_model/scoped_model.dart';

@@ -31,7 +31,7 @@ You can add in widget tree like this -
 // configure `controller`
 var _controller = BlossomTabController<int>(tabs: []); // infer data type for easy access
 
-return BlossomTabControllerScope(
+return BlossomTabControllerScope<int>(
   controller: _controller,
   child: Scaffold(
     appBar: BlossomTabBar<int>(

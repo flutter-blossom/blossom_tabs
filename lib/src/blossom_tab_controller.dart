@@ -85,10 +85,13 @@ class BlossomTabControllerScopeDescendant<T> extends StatelessWidget {
     try {
       ScopedModel.of<BlossomTabController<T>>(context, rebuildOnChange: rebuildOnChange);
     } catch (e) {
-      throw '''Error: Could not find any "BlossomTabControllerScope" ancestor.
+      throw '''Error: Could not find any "BlossomTabControllerScope<$T>" ancestor.
 
 To fix:
-  Try adding "BlossomTabControllerScope" as parent of the widgets.
+  Try adding "BlossomTabControllerScope" with "<$T>" as parent of the widgets.
+
+  ** see if data type match with controller, model and view. it needs to be same in all the places
+  or you can leave it empty. but we recommend you always provide a data type.
 
       ''';
     }

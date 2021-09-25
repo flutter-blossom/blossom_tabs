@@ -17,7 +17,7 @@ Map<String, dynamic>? _dataToJson<T>(T data) =>
 
 @JsonSerializable()
 class BlossomTab<T> {
-  const BlossomTab({
+  BlossomTab({
     required this.id,
     this.data,
     this.title,
@@ -39,15 +39,15 @@ class BlossomTab<T> {
   final double maxWidth;
   final double stickyWidth;
   @JsonKey(ignore: true)
-  final TextStyle? style;
+  TextStyle? style;
   @JsonKey(ignore: true)
-  final TextStyle? activeStyle;
+  TextStyle? activeStyle;
   @JsonKey(ignore: true)
-  final Widget? icon;
+  Widget? icon;
   @JsonKey(ignore: true)
-  final Widget? activeIcon;
+  Widget? activeIcon;
   @JsonKey(ignore: true)
-  final List<Widget> actions;
+  List<Widget> actions;
 
   static BlossomTab<S> fromJson<S>(
           Map<String, dynamic> json, S Function(Map<String, dynamic>) dataFromJson) =>
@@ -67,7 +67,14 @@ class BlossomTab<T> {
                     const SizedBox(
                       width: 10,
                     ),
-                Text(title ?? '', style: isActive ? activeStyle ?? style : style),
+                Flexible(
+                  child: Text(
+                    title ?? '',
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
+                    style: isActive ? activeStyle ?? style : style,
+                  ),
+                ),
               ],
             ),
           );

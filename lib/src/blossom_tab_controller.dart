@@ -20,18 +20,25 @@ class BlossomTabController<T> extends Model {
   final List<BlossomTab<T>> tabs;
 
   @JsonKey(ignore: true)
-  final pageController = PageController();
+  PageController pageController = PageController();
 
   String? get currentTab => _currentTab;
 
   static BlossomTabController<S> fromJson<S>(
-          Map<String, dynamic> json, S Function(Map<String, dynamic>) dataFromJson) =>
-      _$BlossomTabControllerFromJson<S>(json, dataFromJson);
+      Map<String, dynamic> json, S Function(Map<String, dynamic>) dataFromJson) {
+    final _c = _$BlossomTabControllerFromJson<S>(json, dataFromJson);
+    _c.pageController =
+        PageController(initialPage: _c.tabs.indexWhere((e) => e.id == _c.currentTab));
+    return _c;
+  }
+
   Map<String, dynamic> toJson() => _$BlossomTabControllerToJson(this);
 
   set currentTab(String? tab) {
     _currentTab = tab;
-    pageController.jumpToPage(tabs.indexWhere((e) => e.id == tab));
+    try {
+      pageController.jumpToPage(tabs.indexWhere((e) => e.id == tab));
+    } catch (e) {}
     notifyListeners();
   }
 

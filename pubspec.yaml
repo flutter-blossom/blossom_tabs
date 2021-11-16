@@ -1,6 +1,6 @@
 name: blossom_tabs
 description: Blossom Tab Manger Package for Flutter Blossom and related projects.
-version: 1.1.1
+version: 3.0.0
 repository: https://github.com/flutter-blossom/blossom_tabs
 
 environment:

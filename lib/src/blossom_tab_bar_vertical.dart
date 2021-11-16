@@ -7,23 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class BlossomTabBar<T> extends StatefulWidget {
-  const BlossomTabBar({
+class BlossomVerticalTabBar<T> extends StatefulWidget {
+  const BlossomVerticalTabBar({
     Key? key,
     required this.selectedColor,
     this.dragColor,
     this.stickyColor,
     this.backgroundColor,
-    this.bottomColor,
     this.dividerColor,
     this.shadowColor,
     this.dragShadowColor,
-    this.height = 42,
+    this.width = 42,
+    this.sideBarWidth = 0,
     this.tabBarMargin = 4,
     this.margin = EdgeInsets.zero,
-    this.bottomBarHeight = 0,
-    this.bottomBar,
-    this.showBottomBarOnOppositeSide = false,
+    this.sideBar,
+    this.sideBarColor,
+    this.showSideBarOnOppositeSide = false,
     this.shiftOnDrag = false,
     this.borderRadius = const Radius.circular(8.0),
     this.showIndicator = false,
@@ -38,17 +38,18 @@ class BlossomTabBar<T> extends StatefulWidget {
   final Color? dragColor;
   final Color? stickyColor;
   final Color? backgroundColor;
-  final Color? bottomColor;
+  final Color? sideBarColor;
   final Color? dividerColor;
+
   final Color? shadowColor;
   final Color? dragShadowColor;
-  final double height;
+  final double width;
   final double tabBarMargin;
   final EdgeInsets margin;
   final Radius borderRadius;
-  final double bottomBarHeight;
-  final Widget? bottomBar;
-  final bool showBottomBarOnOppositeSide;
+  final double sideBarWidth;
+  final Widget? sideBar;
+  final bool showSideBarOnOppositeSide;
   final bool shiftOnDrag;
   final bool showIndicator;
   final bool showIndicatorOnOppositeSide;
@@ -57,12 +58,11 @@ class BlossomTabBar<T> extends StatefulWidget {
   final Color? indicatorColor;
   final List<Widget> actions;
   final void Function(T)? onSecondaryTap;
-
   @override
-  State<BlossomTabBar> createState() => _BlossomTabBarState<T>();
+  State<BlossomVerticalTabBar> createState() => _BlossomVerticalTabBarState<T>();
 }
 
-class _BlossomTabBarState<K> extends State<BlossomTabBar> {
+class _BlossomVerticalTabBarState<K> extends State<BlossomVerticalTabBar> {
   String? dragId;
   String? hoverId;
   @override
@@ -72,23 +72,24 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (widget.bottomBarHeight != 0 && widget.showBottomBarOnOppositeSide)
+        if (widget.sideBarWidth != 0 && widget.showSideBarOnOppositeSide)
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onPanDown: (_) {},
             onTap: () {},
             onDoubleTap: () {},
             child: Container(
-              color: widget.bottomColor,
-              height: widget.bottomBarHeight,
-              child: widget.bottomBar,
+              color: widget.sideBarColor,
+              width: widget.sideBarWidth,
+              child: widget.sideBar,
             ),
           ),
         Container(
           color: widget.backgroundColor,
-          height: widget.height - widget.bottomBarHeight,
+          width: widget.width - widget.sideBarWidth,
           child: Padding(
             padding: widget.margin,
             child: BlossomTabControllerScopeDescendant<K>(builder: (context, controller) {
@@ -98,7 +99,7 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
               final hoverIndex = hoverId == null
                   ? 0
                   : controller.tabs.indexWhere((e) => e.id == hoverId);
-              return Row(
+              return Column(
                 children: [
                   ...controller.tabs.map((e) {
                     final showDivider = ((e.id != controller.currentTab &&
@@ -117,8 +118,8 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
                       flex: e.isSticky ? 0 : 1,
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxWidth: e.isSticky ? e.stickySize : e.maxSize,
-                          minWidth: e.stickySize,
+                          maxHeight: e.isSticky ? e.stickySize : e.maxSize,
+                          minHeight: e.stickySize,
                         ),
                         child: MouseRegion(
                           onEnter: (_) {
@@ -133,7 +134,7 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
                               builder: (context, constraints) {
                                 return Draggable<BlossomTab<K>>(
                                   data: e,
-                                  axis: Axis.horizontal,
+                                  axis: Axis.vertical,
                                   maxSimultaneousDrags: e.isSticky ? 0 : 1,
                                   onDragStarted: () {
                                     setState(() => dragId = e.id);
@@ -141,19 +142,16 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
                                   onDragCompleted: () => setState(() {
                                     hoverId = null;
                                     dragId = null;
-                                    // just to notify the change in order of tabs
                                     controller.currentTab = controller.currentTab;
                                   }),
                                   onDraggableCanceled: (_, __) => setState(() {
                                     hoverId = null;
                                     dragId = null;
-                                    // just to notify the change in order of tabs
                                     controller.currentTab = controller.currentTab;
                                   }),
                                   onDragEnd: (_) => setState(() {
                                     hoverId = null;
                                     dragId = null;
-                                    // just to notify the change in order of tabs
                                     controller.currentTab = controller.currentTab;
                                   }),
                                   feedback: ScopedModel(
@@ -161,13 +159,13 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
                                     child: Material(
                                       type: MaterialType.transparency,
                                       child: Transform.translate(
-                                        offset: Offset(0, widget.tabBarMargin / 2),
+                                        offset: Offset(widget.tabBarMargin / 2, 0),
                                         child: Container(
-                                          height: widget.height -
-                                              widget.bottomBarHeight -
-                                              widget.margin.top -
-                                              widget.margin.bottom,
-                                          width: constraints.maxWidth,
+                                          width: widget.width -
+                                              widget.sideBarWidth -
+                                              widget.margin.right -
+                                              widget.margin.left,
+                                          height: constraints.maxHeight,
                                           decoration: BoxDecoration(
                                             color:
                                                 widget.dragColor ?? widget.selectedColor,
@@ -179,8 +177,8 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
                                                     ? BorderRadius.all(
                                                         widget.borderRadius,
                                                       )
-                                                    : BorderRadius.vertical(
-                                                        top: widget.borderRadius),
+                                                    : BorderRadius.horizontal(
+                                                        left: widget.borderRadius),
                                             boxShadow: [
                                               if (widget.shiftOnDrag &&
                                                   widget.selectedColor.opacity == 1.0)
@@ -220,12 +218,12 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
                                       return Stack(
                                         children: [
                                           Align(
-                                            alignment: Alignment.centerRight,
-                                            child: VerticalDivider(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Divider(
                                               color: dragId != null || showDivider
                                                   ? widget.dividerColor
                                                   : Colors.transparent,
-                                              width: 1,
+                                              height: 1,
                                               indent: 8 + widget.tabBarMargin,
                                               endIndent: 8,
                                             ),
@@ -239,9 +237,9 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
                                             child: Opacity(
                                               opacity: dragId == e.id ? 0 : 1,
                                               child: Container(
-                                                height: double.infinity,
+                                                width: double.infinity,
                                                 margin: EdgeInsets.only(
-                                                    top: e.id == hoverId
+                                                    left: e.id == hoverId
                                                         ? widget.tabBarMargin / 2
                                                         : widget.tabBarMargin),
                                                 decoration: e.id ==
@@ -258,8 +256,9 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
                                                             ? BorderRadius.all(
                                                                 widget.borderRadius,
                                                               )
-                                                            : BorderRadius.vertical(
-                                                                top: widget.borderRadius),
+                                                            : BorderRadius.horizontal(
+                                                                left:
+                                                                    widget.borderRadius),
                                                         boxShadow: [
                                                             if (!e.isSticky &&
                                                                 widget.selectedColor
@@ -290,12 +289,12 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
                                             Align(
                                               alignment:
                                                   widget.showIndicatorOnOppositeSide
-                                                      ? Alignment.topCenter
-                                                      : Alignment.bottomCenter,
-                                              child: Divider(
+                                                      ? Alignment.centerLeft
+                                                      : Alignment.centerRight,
+                                              child: VerticalDivider(
                                                 thickness: widget.indicatorThickness,
                                                 color: widget.indicatorColor,
-                                                height: widget.indicatorThickness,
+                                                width: widget.indicatorThickness,
                                                 indent: widget.applyIndicatorIndent
                                                     ? widget.borderRadius.y / 2
                                                     : null,
@@ -335,16 +334,16 @@ class _BlossomTabBarState<K> extends State<BlossomTabBar> {
             }),
           ),
         ),
-        if (widget.bottomBarHeight != 0 && !widget.showBottomBarOnOppositeSide)
+        if (widget.sideBarWidth != 0 && !widget.showSideBarOnOppositeSide)
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onPanDown: (_) {},
             onTap: () {},
             onDoubleTap: () {},
             child: Container(
-              color: widget.bottomColor,
-              height: widget.bottomBarHeight,
-              child: widget.bottomBar,
+              color: widget.sideBarColor,
+              width: widget.sideBarWidth,
+              child: widget.sideBar,
             ),
           )
       ],

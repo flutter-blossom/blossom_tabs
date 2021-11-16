@@ -13,8 +13,9 @@ BlossomTab<T> _$BlossomTabFromJson<T>(
       data: _dataFromJson<T>(json['data'] as Map<String, dynamic>, dataFromJson),
       title: json['title'] as String?,
       isSticky: json['isSticky'] as bool? ?? false,
-      maxWidth: (json['maxWidth'] as num?)?.toDouble() ?? 200,
-      stickyWidth: (json['stickyWidth'] as num?)?.toDouble() ?? 50,
+      maxSize: (json['maxSize'] as num?)?.toDouble() ?? 200,
+      stickySize: (json['stickySize'] as num?)?.toDouble() ?? 50,
+      useRow: json['useRow'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$BlossomTabToJson<T>(BlossomTab<T> instance) => <String, dynamic>{
@@ -22,6 +23,7 @@ Map<String, dynamic> _$BlossomTabToJson<T>(BlossomTab<T> instance) => <String, d
       'data': _dataToJson(instance.data),
       'title': instance.title,
       'isSticky': instance.isSticky,
-      'maxWidth': instance.maxWidth,
-      'stickyWidth': instance.stickyWidth,
+      'maxSize': instance.maxSize,
+      'stickySize': instance.stickySize,
+      'useRow': instance.useRow,
     };

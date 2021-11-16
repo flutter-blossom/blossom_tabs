@@ -50,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
           data: int.parse(e.codeUnits.join()),
           title: e.toUpperCase(),
           isSticky: e == 'd',
-          stickyWidth: 80,
           activeStyle: e == 'd' ? null : const TextStyle(color: Colors.white),
           icon: e == 'd'
               ? null
@@ -123,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
               MoveWindow(
                 child: BlossomTabBar<int>(
                   height: 85,
-                  bottomHeight: 40,
+                  bottomBarHeight: 40,
                   selectedColor: Colors.blue,
                   dragColor: Colors.blue.withOpacity(0.6),
                   stickyColor: Colors.white,
@@ -131,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   dividerColor: Colors.blue,
                   bottomColor: Colors.blue,
                   margin: const EdgeInsets.only(left: 4, top: 4, right: 140),
-                  marginTop: 4,
+                  tabBarMargin: 4,
                   bottomBar: BlossomTabControllerScopeDescendant<int>(
                       builder: (context, controller) {
                     // Future.delayed(Duration.zero)
@@ -164,21 +163,55 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-        body: BlossomTabView<int>(
-          builder: (context, data) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ColorBox(
-                  child: Center(
-                      child: Text(
-                    data.toString(),
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
-                  )),
-                ),
+        body: Row(
+          children: [
+            BlossomVerticalTabBar<int>(
+              width: 240,
+              sideBarWidth: 180,
+              selectedColor: Colors.blue,
+              dragColor: Colors.blue.withOpacity(0.6),
+              stickyColor: Colors.white,
+              backgroundColor: Colors.blue.withOpacity(0.3),
+              dividerColor: Colors.blue,
+              sideBarColor: Colors.blue,
+              margin: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 40),
+              tabBarMargin: 0,
+              showIndicator: true,
+              indicatorColor: Colors.white,
+              sideBar: BlossomTabControllerScopeDescendant<int>(
+                  builder: (context, controller) {
+                // Future.delayed(Duration.zero)
+                //     .then((_) => print(jsonEncode(controller.toJson())));
+                return Container(
+                  color: controller.currentTab == 'd' ? Colors.white : null,
+                );
+              }),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: NewTabBtn(
+                    onTap: () {
+                      final z = _controller.tabs.map((e) => e.id).toList()..sort();
+                      var c = z.isEmpty ? 'a' : z.last;
+                      final lastCharacter =
+                          String.fromCharCode(c.codeUnitAt(c.length - 1) + 1);
+                      c = c.substring(0, c.length - 1) + lastCharacter;
+                      _controller.addTab(_getTab(c));
+                    },
+                  ),
+                )
               ],
-            );
-          },
+            ),
+            Expanded(
+              child: BlossomTabControllerScopeDescendant<int>(builder: (context, c) {
+                return BlossomTabView<int>(
+                  buildChildren: (tabs) => tabs
+                      .map((e) => ColorBox(child: Center(child: Text(e.id))))
+                      .toList(),
+                );
+              }),
+            ),
+          ],
         ),
       ),
     );

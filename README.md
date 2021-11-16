@@ -42,13 +42,9 @@ return BlossomTabControllerScope<int>(
       dividerColor: Colors.blue,
     ),
     body: BlossomTabView<int>(
-      builder: (context, data) {
-        return Center(
-            child: Text(
-          data.toString(),
-          style: const TextStyle(color: Colors.white, fontSize: 18),
-        ));
-      },
+      buildChildren: (tabs) => tabs
+        .map((e) => ColorBox(child: Center(child: Text(e.id))))
+        .toList(),
     ),
   ),
 );

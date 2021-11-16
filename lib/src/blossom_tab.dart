@@ -24,10 +24,11 @@ class BlossomTab<T> {
     this.icon,
     this.activeIcon,
     this.isSticky = false,
-    this.maxWidth = 200,
-    this.stickyWidth = 50,
+    this.maxSize = 200,
+    this.stickySize = 50,
     this.style,
     this.activeStyle,
+    this.useRow = true,
     this.actions = const [],
   }) : assert(title != null || icon != null,
             'title and iconData both can\'t be null at the same time');
@@ -36,8 +37,9 @@ class BlossomTab<T> {
   final T? data;
   final String? title;
   final bool isSticky;
-  final double maxWidth;
-  final double stickyWidth;
+  final double maxSize;
+  final double stickySize;
+  final bool useRow;
   @JsonKey(ignore: true)
   TextStyle? style;
   @JsonKey(ignore: true)
@@ -55,28 +57,40 @@ class BlossomTab<T> {
   Map<String, dynamic> toJson() => _$BlossomTabToJson(this);
 
   Widget build(BuildContext context, bool isActive) {
-    return isSticky
-        ? Center(
-            child: (isActive ? activeIcon ?? icon : icon) ??
-                Text(title ?? '', style: isActive ? activeStyle ?? style : style))
-        : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Row(
+    var children = [
+      (isActive ? activeIcon ?? icon : icon) ??
+          const SizedBox(
+            width: 10,
+          ),
+      if (title != null)
+        Flexible(
+          child: Text(
+            title!,
+            softWrap: false,
+            overflow: TextOverflow.fade,
+            style: isActive ? activeStyle ?? style : style,
+          ),
+        ),
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: useRow
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                (isActive ? activeIcon ?? icon : icon) ??
-                    const SizedBox(
-                      width: 10,
-                    ),
-                Flexible(
-                  child: Text(
-                    title ?? '',
-                    softWrap: false,
-                    overflow: TextOverflow.fade,
-                    style: isActive ? activeStyle ?? style : style,
-                  ),
+                Row(children: children),
+              ],
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: children,
                 ),
               ],
             ),
-          );
+    );
   }
 }

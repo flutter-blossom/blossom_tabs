@@ -3,20 +3,27 @@ import 'package:blossom_tabs/src/blossom_tab_controller.dart';
 import 'package:flutter/material.dart';
 
 class BlossomTabView<T> extends StatelessWidget {
-  const BlossomTabView({Key? key, required this.buildChildren}) : super(key: key);
-  final List<Widget> Function(List<BlossomTab<T>> tabs) buildChildren;
+  const BlossomTabView({Key? key, required this.builder}) : super(key: key);
+  final Widget Function(BlossomTab<T> id) builder;
 
   @override
   Widget build(BuildContext context) {
     return BlossomTabControllerScopeDescendant<T>(
       builder: (context, controller) {
-        return PageView(
+        return PageView.custom(
           controller: controller.pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: buildChildren(controller.tabs)
-              .map((e) => _BlossomTabView(child: e))
-              .toList(),
-          pageSnapping: false,
+          childrenDelegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return _BlossomTabView(
+                  key: ValueKey<BlossomTab<T>>(controller.tabs[index]),
+                  child: builder(controller.tabs[index]),
+                );
+              },
+              childCount: controller.tabs.length,
+              findChildIndexCallback: (Key key) {
+                final ValueKey<BlossomTab<T>> valueKey = key as ValueKey<BlossomTab<T>>;
+                return controller.tabs.indexOf(valueKey.value);
+              }),
         );
       },
     );

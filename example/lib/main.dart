@@ -203,13 +203,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Expanded(
-              child: BlossomTabControllerScopeDescendant<int>(builder: (context, c) {
-                return BlossomTabView<int>(
-                  buildChildren: (tabs) => tabs
-                      .map((e) => ColorBox(child: Center(child: Text(e.id))))
-                      .toList(),
-                );
-              }),
+              child: BlossomTabView<int>(
+                builder: (tab) => ColorBox(
+                  child: Center(child: ColorBox(child: Center(child: Text(tab.id)))),
+                ),
+              ),
             ),
           ],
         ),
